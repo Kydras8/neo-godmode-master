@@ -1,0 +1,30 @@
+{
+  "name": "neo-godmode-vscode",
+  "displayName": "Neo Godmode",
+  "description": "Insert and manage Neo Godmode master prompts from VS Code.",
+  "version": "0.1.0",
+  "publisher": "your-name-here",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "activationEvents": [
+    "onCommand:neo-godmode.insertPrompt",
+    "onCommand:neo-godmode.newPromptFile"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "neo-godmode.insertPrompt",
+        "title": "Neo Godmode: Insert Master Prompt"
+      },
+      {
+        "command": "neo-godmode.newPromptFile",
+        "title": "Neo Godmode: New Prompt File"
+      }
+    ]
+  },
+  "main": "./out/extension.js",
+  "categories": [
+    "Other"
+  ]
+}
