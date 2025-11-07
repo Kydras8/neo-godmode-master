@@ -1,4 +1,3 @@
-openai==1.51.0
-python-dotenv==1.0.1
-requests==2.32.3
-sqlite-utils==3.37
+This file was canonicalized. See the canonical source in the repository:
+
+kits/neo-godmode-baremetal-kit/neo-godmode/api/requirements.txt
