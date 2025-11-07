@@ -1,4 +1,109 @@
 #!/usr/bin/env python3
+"""Safely archive duplicate files and replace kit copies with README pointers.
+
+This script does NOT delete anything permanent. It moves files to
+archive/duplicates/YYYYMMDD/<original-path> and leaves a README.md
+at the original location pointing to the canonical `baremetal-kit`.
+
+Run locally and inspect changes before committing.
+"""
+import hashlib
+import os
+import shutil
+import datetime
+
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+ARCHIVE_BASE = os.path.join(ROOT, 'archive', 'duplicates', datetime.datetime.utcnow().strftime('%Y%m%d'))
+
+# Candidate lists (from proposal)
+EXTRAS = [
+    'extras/neo-openai-skeleton.py',
+    'extras/neo-orchestrator-real.py',
+    'extras/requirements-2.txt',
+    'extras/requirements.txt',
+    'extras/run-evals.py',
+    'extras/test-actions.py',
+    'extras/app-4.py',
+    'extras/mint-jwt.py',
+    'extras/requirements-1.txt',
+    'extras/requirements-6.txt',
+    'extras/app-1.py',
+    'extras/app-2.py',
+    'extras/app-3.py',
+    'extras/app.py',
+    'extras/deploy.sh',
+    'extras/provision.sh',
+    'extras/requirements-3.txt',
+    'extras/requirements-4.txt',
+    'extras/requirements-5.txt',
+    'extras/worker.py',
+]
+
+KIT_DUPES = [
+    'api/neo_openai_skeleton.py',
+    'orchestrator/neo_orchestrator_real.py',
+    'worker/worker.py',
+    'actions/app.py',
+    'api/requirements.txt',
+    'orchestrator/requirements.txt',
+]
+
+def ensure_dir(path):
+    os.makedirs(path, exist_ok=True)
+
+def move_to_archive(relpath):
+    src = os.path.join(ROOT, *relpath.split('/'))
+    if not os.path.exists(src):
+        print('missing', relpath)
+        return False
+    dest = os.path.join(ARCHIVE_BASE, relpath)
+    ensure_dir(os.path.dirname(dest))
+    print('moving', relpath, '->', os.path.relpath(dest, ROOT))
+    shutil.move(src, dest)
+    return True
+
+def write_pointer(readme_path, canonical_rel):
+    ensure_dir(os.path.dirname(readme_path))
+    content = f"This file was removed and archived. The canonical source is at: {canonical_rel}\n"
+    with open(readme_path, 'w', encoding='utf-8') as f:
+        f.write(content)
+
+def apply_extras():
+    for rel in EXTRAS:
+        move_to_archive(rel)
+
+def apply_kits():
+    kits_root = os.path.join(ROOT, 'kits')
+    for kit in os.listdir(kits_root):
+        kit_path = os.path.join(kits_root, kit, 'neo-godmode')
+        if not os.path.isdir(kit_path):
+            continue
+        # Skip baremetal canonical
+        if 'baremetal' in kit:
+            continue
+        for rel in KIT_DUPES:
+            src = os.path.join(kit_path, *rel.split('/'))
+            if os.path.exists(src):
+                relpath = os.path.relpath(src, ROOT).replace('\\', '/')
+                # move to archive preserving kit path
+                move_to_archive(relpath)
+                # write pointer README at original location
+                readme = src
+                # if it was a file, place README.md alongside
+                readme_path = src + '.README.txt'
+                canonical = os.path.join('kits', 'neo-godmode-baremetal-kit', 'neo-godmode', rel).replace('\\','/')
+                write_pointer(readme_path, canonical)
+
+def main():
+    print('Archive base:', ARCHIVE_BASE)
+    ensure_dir(ARCHIVE_BASE)
+    apply_extras()
+    apply_kits()
+    print('Done. Inspect archive/duplicates and workspace for pointer files.')
+
+if __name__ == '__main__':
+    main()
+#!/usr/bin/env python3
 """Safe dedupe operations: move extras duplicates to archive and replace kit duplicates with README pointers.
 
 Run this only after review. It is conservative: moves files to archive and creates README pointers in kit folders (except baremetal kit).
