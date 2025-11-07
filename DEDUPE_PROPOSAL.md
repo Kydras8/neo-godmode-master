@@ -4,6 +4,7 @@ DEDUPE PROPOSAL
 This document lists candidate files to remove or archive as part of an aggressive deduplication step. Do NOT apply deletions until maintainers review and approve. The goal: keep `kits/neo-godmode-baremetal-kit/neo-godmode/` as the canonical source and remove or archive identical copies in `extras/` and other kit folders.
 
 Summary of recommendation
+
 - Keep canonical copies in: `kits/neo-godmode-baremetal-kit/neo-godmode/`
 - Move exact duplicate files found under `extras/` to `archive/duplicates/` (or delete) — these appear to be snapshots.
 - For kit copies (kits/*/neo-godmode/...), remove duplicate files and replace with a small README pointing to the canonical source. Alternatively, keep the copies but mark `baremetal-kit` as canonical in CONTRIBUTING.md (current state).
