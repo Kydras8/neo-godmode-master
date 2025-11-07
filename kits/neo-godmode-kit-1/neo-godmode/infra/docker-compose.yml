@@ -1,0 +1,31 @@
+services:
+  actions:
+    build:
+      context: ..
+      dockerfile: actions/Dockerfile
+    image: neo-actions:latest
+    container_name: neo-actions
+    env_file: ../.env
+    environment:
+      - NEO_DB_PATH=/data/neo_store.sqlite3
+    volumes:
+      - ../data:/data
+      - ../deliverables:/deliverables
+    ports:
+      - "8080:8080"
+
+  api:
+    image: python:3.11-slim
+    container_name: neo-api
+    working_dir: /app
+    env_file: ../.env
+    environment:
+      - ACTIONS_URL=http://actions:8080
+      - NEO_DB_PATH=/data/neo_store.sqlite3
+    volumes:
+      - ../api:/app/api
+      - ../data:/data
+      - ../deliverables:/deliverables
+    command: bash -lc "pip install -r api/requirements.txt && python api/neo_openai_skeleton.py"
+    depends_on:
+      - actions
