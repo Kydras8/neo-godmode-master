@@ -191,3 +191,5 @@ Artifacts appear in `deliverables/`.
 - Rotation every `JWKS_ROTATE_HOURS` (keeps previous key for grace)
 
 **Security**: adjust firewall, rotate secrets, and consider adding fail2ban/ufw.
+
+[![Compliance Dashboard](https://img.shields.io/badge/Kydras-Dashboard-blue)](https://Kydras8.github.io/neo-godmode/)

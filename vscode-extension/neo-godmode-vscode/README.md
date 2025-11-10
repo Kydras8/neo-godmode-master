@@ -13,3 +13,5 @@ Files were exported from https://github.com/DefinitelyTyped/DefinitelyTyped/tree
 
 # Credits
 These definitions were written by [Visual Studio Code Team, and Microsoft](https://github.com/microsoft).
+
+[![Compliance Dashboard](https://img.shields.io/badge/Kydras-Dashboard-blue)](https://Kydras8.github.io/neo-godmode-vscode/)

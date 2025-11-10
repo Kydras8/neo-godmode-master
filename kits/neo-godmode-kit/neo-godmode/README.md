@@ -59,3 +59,4 @@ Use any identity from README bottom or the system prompts you were given. Neo-mo
 ```
 
 **Security Note:** These endpoints are generic and must **not** be used for any illegal activity; they are designed for lawful automation and R&D support only.
+[![Compliance Dashboard](https://img.shields.io/badge/Kydras-Dashboard-blue)](https://Kydras8.github.io/neo-godmode/)

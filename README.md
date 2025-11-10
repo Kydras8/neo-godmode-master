@@ -1,3 +1,6 @@
+# ⚡ Kydras Systems Inc.
+
+> Black–Gold Standard • Eye of Horus • "Nothing is off limits."
 # Neo Godmode — Master Toolkit
 
 A unified, normalized collection of all Neo Godmode kits (baremetal, pro, ultra, originals) plus the latest **Prompt Kit**.
@@ -39,3 +42,6 @@ Content installs to `~/.neo-godmode/` by default (override by editing scripts).
 
 ## GitHub Push
 Use the bootstrap commands (below) to initialize and push this repo.
+
+[![Compliance Dashboard](https://img.shields.io/badge/Kydras-Dashboard-blue)](https://Kydras8.github.io/neo-godmode-master/)
+

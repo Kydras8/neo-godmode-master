@@ -95,3 +95,5 @@ export ACTIONS_URL=https://$DOMAIN
 export ACTIONS_API_KEY=change-me
 python evals/run_evals.py
 ```
+
+[![Compliance Dashboard](https://img.shields.io/badge/Kydras-Dashboard-blue)](https://Kydras8.github.io/neo-godmode/)

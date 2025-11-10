@@ -126,3 +126,5 @@ Add repository secrets:
 - `GHCR_IMAGE` (e.g., ghcr.io/your-org/neo-actions:latest)
 
 Push to `main` to run tests and publish the image.
+
+[![Compliance Dashboard](https://img.shields.io/badge/Kydras-Dashboard-blue)](https://Kydras8.github.io/neo-godmode/)
