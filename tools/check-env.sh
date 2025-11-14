@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Environment validation script for Neo Godmode
-set -euo pipefail
+set -eo pipefail
 
 echo "╔════════════════════════════════════════════════════════════╗"
 echo "║  Neo Godmode — Environment Configuration Check            ║"
@@ -37,13 +37,13 @@ check_required() {
         local value=$(grep "^${var_name}=" "$ENV_FILE" | cut -d'=' -f2-)
         if [ -z "$value" ] || [ "$value" = "your_key_here" ] || [ "$value" = "change-me" ]; then
             echo -e "${RED}✗ ${friendly_name} (${var_name}) is not set${NC}"
-            ((ERRORS++))
+            ERRORS=$((ERRORS + 1))
         else
             echo -e "${GREEN}✓ ${friendly_name} (${var_name})${NC}"
         fi
     else
         echo -e "${RED}✗ ${friendly_name} (${var_name}) is missing${NC}"
-        ((ERRORS++))
+        ERRORS=$((ERRORS + 1))
     fi
 }
 
@@ -56,13 +56,13 @@ check_optional() {
         local value=$(grep "^${var_name}=" "$ENV_FILE" | cut -d'=' -f2-)
         if [ -z "$value" ] || [ "$value" = "your_key_here" ] || [ "$value" = "change-me" ]; then
             echo -e "${YELLOW}⚠ ${friendly_name} (${var_name}) uses default value${NC}"
-            ((WARNINGS++))
+            WARNINGS=$((WARNINGS + 1))
         else
             echo -e "${GREEN}✓ ${friendly_name} (${var_name})${NC}"
         fi
     else
         echo -e "${YELLOW}⚠ ${friendly_name} (${var_name}) is not set${NC}"
-        ((WARNINGS++))
+        WARNINGS=$((WARNINGS + 1))
     fi
 }
 
@@ -76,7 +76,7 @@ check_security() {
         local value=$(grep "^${var_name}=" "$ENV_FILE" | cut -d'=' -f2-)
         if echo "$value" | grep -q "$default_pattern"; then
             echo -e "${YELLOW}⚠ ${friendly_name} (${var_name}) uses insecure default${NC}"
-            ((WARNINGS++))
+            WARNINGS=$((WARNINGS + 1))
         else
             echo -e "${GREEN}✓ ${friendly_name} (${var_name})${NC}"
         fi
