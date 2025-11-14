@@ -1,0 +1,79 @@
+version: 2
+updates:
+  # Enable version updates for Python dependencies
+  - package-ecosystem: "pip"
+    directory: "/kits/neo-godmode-baremetal-kit/neo-godmode/actions"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "Kydras8"
+    labels:
+      - "dependencies"
+      - "python"
+    commit-message:
+      prefix: "[deps]"
+      include: "scope"
+
+  - package-ecosystem: "pip"
+    directory: "/kits/neo-godmode-baremetal-kit/neo-godmode/api"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "Kydras8"
+    labels:
+      - "dependencies"
+      - "python"
+    commit-message:
+      prefix: "[deps]"
+      include: "scope"
+
+  - package-ecosystem: "pip"
+    directory: "/kits/neo-godmode-baremetal-kit/neo-godmode/orchestrator"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "Kydras8"
+    labels:
+      - "dependencies"
+      - "python"
+    commit-message:
+      prefix: "[deps]"
+      include: "scope"
+
+  # Enable version updates for Docker
+  - package-ecosystem: "docker"
+    directory: "/kits/neo-godmode-baremetal-kit/neo-godmode/actions"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "Kydras8"
+    labels:
+      - "dependencies"
+      - "docker"
+    commit-message:
+      prefix: "[deps]"
+      include: "scope"
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "Kydras8"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "[deps]"
+      include: "scope"

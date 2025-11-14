@@ -40,8 +40,74 @@ Content installs to `~/.neo-godmode/` by default (override by editing scripts).
   - **Neo Godmode: New Prompt File** — creates a new prompt file from template.
 - Packaging: produce a `.vsix` by zipping the `neo-godmode-vscode` folder and renaming to `.vsix`, or use `vsce package`.
 
-## GitHub Push
-Use the bootstrap commands (below) to initialize and push this repo.
+## GitHub Repository Setup
+
+### Bootstrap Your Repository
+Initialize and push this repository to GitHub:
+
+**macOS/Linux:**
+```bash
+cd neo-godmode-master/tools
+./bootstrap-repo.sh
+```
+
+**Windows (PowerShell):**
+```powershell
+cd neo-godmode-master\tools
+.\bootstrap-repo.ps1
+```
+
+The script will:
+- Initialize git repository (if not already done)
+- Add GitHub remote origin
+- Create initial commit
+- Push to GitHub
+
+### Local Development Setup
+Set up your local development environment:
+
+**macOS/Linux:**
+```bash
+cd neo-godmode-master/tools
+./setup-local.sh
+```
+
+This will:
+- Check prerequisites (Python, Docker, Git)
+- Create `.env` file from template
+- Install Python dependencies
+- Create necessary directories
+- Validate configuration
+
+### Validate Environment
+Check your configuration before running:
+
+```bash
+cd neo-godmode-master/tools
+./check-env.sh
+```
+
+### GitHub Actions & CI/CD
+This repository includes automated workflows:
+- **CI/CD Pipeline**: Runs tests, lints code, builds and publishes Docker images to GHCR
+- **Duplicate Check**: Scans for duplicate files across kits
+- **Deploy to Bare Metal**: Automated deployment to remote servers
+
+**Required GitHub Secrets** (for CI/CD):
+- `GHCR_USER` - GitHub username for container registry
+- `GHCR_TOKEN` - GitHub personal access token
+- `OPENAI_API_KEY` - OpenAI API key
+- `SERPAPI_API_KEY` - SerpAPI key
+- `ACTIONS_API_KEY` - API key for actions endpoint
+- `JWT_SECRET` - JWT signing secret
+
+**Required for Deployment**:
+- `DEPLOY_SSH_KEY` - SSH private key for deployment
+- `SSH_HOST` - Remote server hostname
+- `SSH_USER` - SSH username
+- `SSH_PATH` - Deployment path on remote server
+- `DOMAIN` - Domain name for production
+- `TRAEFIK_EMAIL` - Email for Let's Encrypt
 
 [![Compliance Dashboard](https://img.shields.io/badge/Kydras-Dashboard-blue)](https://Kydras8.github.io/neo-godmode-master/)
 
