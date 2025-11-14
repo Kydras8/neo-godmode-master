@@ -1,41 +1,12 @@
-# Neo Godmode — Master Toolkit
+# neo-godmode-master — Kydras Systems Inc.
 
-A unified, normalized collection of all Neo Godmode kits (baremetal, pro, ultra, originals) plus the latest **Prompt Kit**.
-This repo deduplicates overlapping files, standardizes names, and collects prompts, branding, templates, docs, and extras in predictable locations.
+This repository is part of the Kydras Systems Inc. ecosystem.
 
-## Structure
-```
-neo-godmode-master/
- ├─ kits/                 # Original kits preserved (normalized names)
- ├─ prompts/              # Aggregated prompts & system instructions (deduped)
- ├─ branding/             # Taglines, hero copy, marketing snippets
- ├─ templates/            # JSON/YAML templates & configs
- ├─ docs/                 # READMEs and guides
- ├─ extras/               # Useful scripts/snippets
- ├─ tools/                # Installer scripts (bash/powershell)
- └─ vscode-extension/     # Ready-to-package VS Code extension
-```
+## Branding
 
-## Quick Install
-### macOS/Linux
-```bash
-cd neo-godmode-master/tools
-./install.sh
-```
-### Windows (PowerShell)
-```powershell
-cd neo-godmode-master\tools
-./install.ps1
-```
+- Owner: Kydras Systems Inc.
+- License: Apache-2.0 (see LICENSE for details)
 
-Content installs to `~/.neo-godmode/` by default (override by editing scripts).
+## Notes
 
-## VS Code / Cursor Extension
-- Extension ID: `neo-godmode-vscode`
-- Commands:
-  - **Neo Godmode: Insert Master Prompt** — inserts the master system prompt into the current editor.
-  - **Neo Godmode: New Prompt File** — creates a new prompt file from template.
-- Packaging: produce a `.vsix` by zipping the `neo-godmode-vscode` folder and renaming to `.vsix`, or use `vsce package`.
-
-## GitHub Push
-Use the bootstrap commands (below) to initialize and push this repo.
+This README was generated automatically by the Kydras Forge Sweep.
