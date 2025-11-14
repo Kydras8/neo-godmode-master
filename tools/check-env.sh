@@ -34,7 +34,8 @@ check_required() {
     local friendly_name=$2
     
     if grep -q "^${var_name}=" "$ENV_FILE"; then
-        local value=$(grep "^${var_name}=" "$ENV_FILE" | cut -d'=' -f2-)
+        local value
+        value=$(grep "^${var_name}=" "$ENV_FILE" | cut -d'=' -f2-)
         if [ -z "$value" ] || [ "$value" = "your_key_here" ] || [ "$value" = "change-me" ]; then
             echo -e "${RED}✗ ${friendly_name} (${var_name}) is not set${NC}"
             ERRORS=$((ERRORS + 1))
@@ -53,7 +54,8 @@ check_optional() {
     local friendly_name=$2
     
     if grep -q "^${var_name}=" "$ENV_FILE"; then
-        local value=$(grep "^${var_name}=" "$ENV_FILE" | cut -d'=' -f2-)
+        local value
+        value=$(grep "^${var_name}=" "$ENV_FILE" | cut -d'=' -f2-)
         if [ -z "$value" ] || [ "$value" = "your_key_here" ] || [ "$value" = "change-me" ]; then
             echo -e "${YELLOW}⚠ ${friendly_name} (${var_name}) uses default value${NC}"
             WARNINGS=$((WARNINGS + 1))
@@ -73,7 +75,8 @@ check_security() {
     local default_pattern=$3
     
     if grep -q "^${var_name}=" "$ENV_FILE"; then
-        local value=$(grep "^${var_name}=" "$ENV_FILE" | cut -d'=' -f2-)
+        local value
+        value=$(grep "^${var_name}=" "$ENV_FILE" | cut -d'=' -f2-)
         if echo "$value" | grep -q "$default_pattern"; then
             echo -e "${YELLOW}⚠ ${friendly_name} (${var_name}) uses insecure default${NC}"
             WARNINGS=$((WARNINGS + 1))
