@@ -1,0 +1,122 @@
+name: Deploy to Bare Metal
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+  push:
+    branches:
+      - main
+    paths:
+      - 'kits/neo-godmode-baremetal-kit/**'
+      - '.github/workflows/deploy-bare.yml'
+
+jobs:
+  deploy:
+    name: Deploy to ${{ github.event.inputs.environment || 'staging' }}
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Create .env file
+        run: |
+          cat > .env << EOF
+          OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL=${{ secrets.OPENAI_MODEL || 'gpt-4o' }}
+          SERPAPI_API_KEY=${{ secrets.SERPAPI_API_KEY }}
+          ACTIONS_API_KEY=${{ secrets.ACTIONS_API_KEY }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          JWT_ALG=HS256
+          JWT_ISS=neo-actions
+          JWT_AUD=neo-clients
+          DEFAULT_SCOPES=plan_create,research_web,fetch_url,code_generate,file_write,task_update,request_human_approval
+          DOMAIN=${{ secrets.DOMAIN }}
+          TRAEFIK_EMAIL=${{ secrets.TRAEFIK_EMAIL }}
+          POSTGRES_USER=${{ secrets.POSTGRES_USER || 'neo' }}
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB=${{ secrets.POSTGRES_DB || 'neo' }}
+          REDIS_HOST=redis
+          REDIS_PORT=6379
+          JWKS_ROTATE_HOURS=24
+          JWKS_KID_PREFIX=neo-key-
+          EOF
+
+      - name: Deploy to server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PATH: ${{ secrets.SSH_PATH }}
+        run: |
+          # Sync repository files
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='__pycache__' \
+            --exclude='*.pyc' \
+            --exclude='.env' \
+            ./ ${SSH_USER}@${SSH_HOST}:${SSH_PATH}/
+          
+          # Copy .env file
+          scp -i ~/.ssh/deploy_key .env ${SSH_USER}@${SSH_HOST}:${SSH_PATH}/kits/neo-godmode-baremetal-kit/neo-godmode/.env
+          
+          # Deploy services
+          ssh -i ~/.ssh/deploy_key ${SSH_USER}@${SSH_HOST} << 'ENDSSH'
+            cd ${SSH_PATH}/kits/neo-godmode-baremetal-kit/neo-godmode/infra
+            docker compose -f docker-compose.bare.yml pull
+            docker compose -f docker-compose.bare.yml up -d --build --remove-orphans
+            docker compose -f docker-compose.bare.yml ps
+          ENDSSH
+
+      - name: Health check
+        run: |
+          echo "Waiting for services to start..."
+          sleep 30
+          
+          # Check if services are responding
+          ssh -i ~/.ssh/deploy_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'ENDSSH'
+            cd ${{ secrets.SSH_PATH }}/kits/neo-godmode-baremetal-kit/neo-godmode/infra
+            
+            # Check container health
+            if docker compose -f docker-compose.bare.yml ps | grep -q "Up"; then
+              echo "✓ Services are running"
+            else
+              echo "✗ Some services failed to start"
+              docker compose -f docker-compose.bare.yml logs --tail=50
+              exit 1
+            fi
+          ENDSSH
+
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -f ~/.ssh/deploy_key
+          rm -f .env
+
+      - name: Notify deployment
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✓ Deployment to ${{ github.event.inputs.environment || 'staging' }} completed successfully"
+          else
+            echo "✗ Deployment to ${{ github.event.inputs.environment || 'staging' }} failed"
+          fi
