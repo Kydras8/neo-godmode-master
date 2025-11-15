@@ -1,7 +1,11 @@
-Kydras Systems Inc. — Apache-2.0 License Stub
-
-This project is intended to be licensed under the Apache License, Version 2.0.
-To complete licensing, use the GitHub 'Add license' feature and select Apache-2.0,
-or replace this file with the full Apache-2.0 text.
-
-SPDX-License-Identifier: Apache-2.0
++Neo Godmode Proprietary License — All Rights Reserved
++
++Copyright (c) 2025 Neo Godmode authors
++
++This software and associated documentation ("Software") are proprietary and confidential. Unauthorized use, copying, modification, distribution, sublicensing, sale, or exploitation of any part of the Software is strictly prohibited without prior written consent from Neo Godmode authors or Kydras System Inc.
++
++Commercial licensing, redistribution, or other rights may be available by separate agreement. Contact the project maintainers for inquiries.
++
++Contributors or users with a signed license agreement are governed by the terms of that agreement.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

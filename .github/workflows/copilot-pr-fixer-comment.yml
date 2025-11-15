@@ -1,0 +1,34 @@
+name: Copilot PR Fixer Comment
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  comment-pr-fixer-prompt:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Add Copilot PR Fixer prompt as a comment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const promptTitle = "🔧 Copilot PR Fixer Prompt";
+            const promptMarker = "<!-- COPILOT_PR_FIXER_PROMPT -->";
+            const body = `${promptMarker}
+${promptTitle}
+
+Please use this prompt in GitHub Copilot Chat (Workspace scope) to review and improve this PR:
+
+\`\`\`markdown
+(See COPILOT-PR-FIXER.md in the repo for the full prompt.)
+\`\`\`
+`;
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+            const { data: comments } = await github.rest.issues.listComments({ owner, repo, issue_number, per_page: 100 });
+            const alreadyCommented = comments.some(c => c.body && c.body.includes(promptMarker));
+            if (alreadyCommented) { core.info("Prompt comment already exists. Skipping."); return; }
+            await github.rest.issues.createComment({ owner, repo, issue_number, body });
